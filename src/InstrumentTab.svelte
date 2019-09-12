@@ -28,13 +28,14 @@
   function updateTouchPositions(event) {
     const newTouches = event.targetTouches;
     touchLength = newTouches.length;
-    let newPoints = [];
+    let newPoints = $springyPoints;
     let currentTouches = $touches;
     for(let i = 0; i < newTouches.length; i++) {
       currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;
       currentTouches[i].y = newTouches[i].clientY / canvas.clientHeight;
 
-      newPoints = [...newPoints, {x: newTouches[i].clientX, y: newTouches[i].clientY}];
+      newPoints[i].x = newTouches[i].clientX;
+      newPoints[i].y = newTouches[i].clientY;
     }
 
     springyPoints.set(newPoints);
@@ -73,15 +74,17 @@
       const zoomfactor = 0.9; //set whatever you want as zoom factor
       ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
-      //draw new lines
-      ctx.beginPath();
-      for(let i=0; i<touchLength; i++) {
-        for(let j=i+1; j<touchLength; j++) {
-          ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
-          ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
+      if(touchLength > 0) {
+        //draw new lines
+        ctx.beginPath();
+        for(let i=0; i<touchLength; i++) {
+          for(let j=i+1; j<touchLength; j++) {
+            ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
+            ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
+          }
         }
+        ctx.stroke();
       }
-      ctx.stroke();
     };
 
     loop();
