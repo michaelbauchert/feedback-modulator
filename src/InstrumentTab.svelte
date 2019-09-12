@@ -32,8 +32,8 @@
 		const ctx = canvas.getContext('2d');
     const copyCtx = copy.getContext('2d');
 
-    ctx.fillStyle = "#4ecca3";
-    copyCtx.fillStyle = "#4ecca3";
+    ctx.strokeStyle = "#4ecca3";
+    copyCtx.strokeStyle = "#4ecca3";
 
     $: canvas.width  = canvas.clientWidth;
     $: canvas.height = canvas.clientHeight;
@@ -58,7 +58,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       //copy old image from copy canvas to display canvas
-      const zoomfactor = 0.995; //set whatever you want as zoom factor
+      const zoomfactor = 0.98; //set whatever you want as zoom factor
       ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
       //draw new lines
