@@ -43,7 +43,7 @@
   }
   onMount(() => {
 		const ctx = canvas.getContext('2d');
-    ctx.globalCompositeOperation = 'darken';
+    ctx.globalCompositeOperation = 'exclusion';
 
     const copyCtx = copy.getContext('2d');
 
@@ -89,7 +89,7 @@
     //copy drawing from display canvas to copy canvas
     copyCtx.drawImage(canvas, 0, 0);
 
-    ctx.fillStyle = "#232931";
+    ctx.fillStyle = "#eeeeee";
     ctx.fill();
 
     loop();
