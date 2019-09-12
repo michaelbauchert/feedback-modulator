@@ -226,6 +226,8 @@ var app = (function () {
         }
     }
 
+    const globals = (typeof window !== 'undefined' ? window : global);
+
     function get_spread_update(levels, updates) {
         const update = {};
         const to_null_out = {};
@@ -537,12 +539,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 73, 2, 2149);
+    			add_location(canvas0, file, 80, 2, 2278);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 79, 2, 2408);
+    			add_location(canvas1, file, 86, 2, 2537);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 72, 0, 2115);
+    			add_location(ion_content, file, 79, 0, 2244);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -592,6 +594,7 @@ var app = (function () {
 
       let canvas;
       let copy;
+      let points = [];
 
       function setTouchDryWet(dryWet, event) {
         const newTouches = event.targetTouches;
@@ -606,6 +609,7 @@ var app = (function () {
 
       function updateTouchPositions(event) {
         const newTouches = event.targetTouches;
+        points = newTouches;
         for(let i = 0; i < newTouches.length; i++) {
           let currentTouches = $touches;
           currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;
@@ -618,11 +622,46 @@ var app = (function () {
     		const ctx = canvas.getContext('2d');
         const copyCtx = copy.getContext('2d');
 
+        ctx.fillStyle = "#4ecca3";
+        copyCtx.fillStyle = "#4ecca3";
+
         $: $$invalidate('canvas', canvas.width  = canvas.clientWidth, canvas);
         $: $$invalidate('canvas', canvas.height = canvas.clientHeight, canvas);
 
         $: $$invalidate('copy', copy.width  = canvas.clientWidth, copy);
         $: $$invalidate('copy', copy.height = canvas.clientHeight, copy);
+
+        let frame;
+
+        function loop() {
+        	frame = requestAnimationFrame(loop);
+
+          copyCtx.globalAlpha = .9;
+
+          //clear copy canvas
+          copyCtx.clearRect(0, 0, copy.width, copy.height);
+
+          //copy drawing from display canvas to copy canvas
+          copyCtx.drawImage(canvas, 0, 0);
+
+          //clear display canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          //copy old image from copy canvas to display canvas
+          const zoomfactor = 0.995; //set whatever you want as zoom factor
+          ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
+
+          //draw new lines
+          ctx.beginPath();
+          for(let i=0; i<points.length; i++) {
+            for(let j=i+1; j<points.length; j++) {
+              ctx.moveTo(points[i].clientX, points[i].clientY);
+              ctx.lineTo(points[j].clientX, points[j].clientY);
+            }
+          }
+          ctx.stroke();
+        }
+        loop();
       });
 
     	function canvas0_binding($$value) {
@@ -648,6 +687,7 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('canvas' in $$props) $$invalidate('canvas', canvas = $$props.canvas);
     		if ('copy' in $$props) $$invalidate('copy', copy = $$props.copy);
+    		if ('points' in $$props) points = $$props.points;
     		if ('$touches' in $$props) touches.set($touches);
     	};
 
@@ -692,32 +732,32 @@ var app = (function () {
     			ion_icon = element("ion-icon");
     			set_custom_element_data(ion_button, "size", "large");
     			set_custom_element_data(ion_button, "shape", "round");
-    			set_custom_element_data(ion_button, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_button, "class", "svelte-qgdmzh");
     			toggle_class(ion_button, "reorder", ctx.reorder);
     			add_location(ion_button, file$1, 99, 10, 2896);
-    			attr_dev(div, "class", "center-button svelte-1rqjrqz");
+    			attr_dev(div, "class", "center-button svelte-qgdmzh");
     			add_location(div, file$1, 98, 8, 2857);
     			set_custom_element_data(ion_item, "lines", "none");
-    			set_custom_element_data(ion_item, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_item, "class", "svelte-qgdmzh");
     			toggle_class(ion_item, "swipe", ctx.swipe);
     			add_location(ion_item, file$1, 97, 6, 2812);
     			set_custom_element_data(ion_icon, "name", "close");
     			set_custom_element_data(ion_icon, "slot", "icon-only");
     			set_custom_element_data(ion_icon, "color", "dark");
-    			set_custom_element_data(ion_icon, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_icon, "class", "svelte-qgdmzh");
     			add_location(ion_icon, file$1, 110, 8, 3230);
     			set_custom_element_data(ion_item_option, "type", "button");
     			set_custom_element_data(ion_item_option, "expandle", "");
     			set_custom_element_data(ion_item_option, "color", "danger");
-    			set_custom_element_data(ion_item_option, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_item_option, "class", "svelte-qgdmzh");
     			add_location(ion_item_option, file$1, 109, 6, 3165);
     			set_custom_element_data(ion_item_options, "side", "end");
-    			set_custom_element_data(ion_item_options, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_item_options, "class", "svelte-qgdmzh");
     			add_location(ion_item_options, file$1, 108, 4, 3094);
-    			set_custom_element_data(ion_item_sliding, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_item_sliding, "class", "svelte-qgdmzh");
     			toggle_class(ion_item_sliding, "shrink", ctx.shrink);
     			add_location(ion_item_sliding, file$1, 96, 2, 2746);
-    			set_custom_element_data(ion_reorder, "class", "svelte-1rqjrqz");
+    			set_custom_element_data(ion_reorder, "class", "svelte-qgdmzh");
     			add_location(ion_reorder, file$1, 95, 0, 2729);
     			dispose = listen_dev(ion_item_options, "ionSwipe", ctx.ionSwipe_handler);
     		},
@@ -994,6 +1034,68 @@ var app = (function () {
     	}
     }
 
+    /* src\Toolbar.svelte generated by Svelte v3.12.0 */
+
+    const file$2 = "src\\Toolbar.svelte";
+
+    function create_fragment$2(ctx) {
+    	var ion_toolbar, ion_buttons, ion_icon0, t, ion_icon1;
+
+    	const block = {
+    		c: function create() {
+    			ion_toolbar = element("ion-toolbar");
+    			ion_buttons = element("ion-buttons");
+    			ion_icon0 = element("ion-icon");
+    			t = space();
+    			ion_icon1 = element("ion-icon");
+    			set_custom_element_data(ion_icon0, "slot", "icon-only");
+    			set_custom_element_data(ion_icon0, "size", "large");
+    			set_custom_element_data(ion_icon0, "name", "information-circle-outline");
+    			set_custom_element_data(ion_icon0, "color", "primary");
+    			add_location(ion_icon0, file$2, 2, 6, 51);
+    			set_custom_element_data(ion_icon1, "slot", "icon-only");
+    			set_custom_element_data(ion_icon1, "name", "card");
+    			set_custom_element_data(ion_icon1, "color", "primary");
+    			add_location(ion_icon1, file$2, 3, 6, 160);
+    			set_custom_element_data(ion_buttons, "slot", "start");
+    			add_location(ion_buttons, file$2, 1, 2, 17);
+    			add_location(ion_toolbar, file$2, 0, 0, 0);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert_dev(target, ion_toolbar, anchor);
+    			append_dev(ion_toolbar, ion_buttons);
+    			append_dev(ion_buttons, ion_icon0);
+    			append_dev(ion_buttons, t);
+    			append_dev(ion_buttons, ion_icon1);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_dev(ion_toolbar);
+    			}
+    		}
+    	};
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$2.name, type: "component", source: "", ctx });
+    	return block;
+    }
+
+    class Toolbar extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$2, safe_not_equal, []);
+    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "Toolbar", options, id: create_fragment$2.name });
+    	}
+    }
+
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
     function unwrapExports (x) {
@@ -1019,8 +1121,9 @@ var app = (function () {
     var Tone_1 = Tone.Tone;
 
     /* src\EffectsTab.svelte generated by Svelte v3.12.0 */
+    const { console: console_1 } = globals;
 
-    const file$2 = "src\\EffectsTab.svelte";
+    const file$3 = "src\\EffectsTab.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
@@ -1029,7 +1132,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (143:6) {#each effects as effect, i}
+    // (116:6) {#each effects as effect, i}
     function create_each_block(ctx) {
     	var current;
 
@@ -1086,12 +1189,14 @@ var app = (function () {
     			destroy_component(audioeffect, detaching);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(143:6) {#each effects as effect, i}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(116:6) {#each effects as effect, i}", ctx });
     	return block;
     }
 
-    function create_fragment$2(ctx) {
-    	var ion_content, ion_toolbar, ion_buttons0, t0, ion_buttons1, ion_button, ion_icon, ion_icon_name_value, t1, div, ion_reorder_group, ion_reorder_group_disabled_value, t2, ion_action_sheet_controller, t3, ion_fab, ion_fab_button, span, current, dispose;
+    function create_fragment$3(ctx) {
+    	var ion_content, t0, ion_fab0, ion_fab_button0, ion_icon, ion_icon_name_value, t1, div, ion_reorder_group, ion_reorder_group_disabled_value, t2, ion_action_sheet_controller, t3, ion_fab1, ion_fab_button1, span, current, dispose;
+
+    	var toolbar = new Toolbar({ $$inline: true });
 
     	let each_value = ctx.effects;
 
@@ -1108,11 +1213,10 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			ion_content = element("ion-content");
-    			ion_toolbar = element("ion-toolbar");
-    			ion_buttons0 = element("ion-buttons");
+    			toolbar.$$.fragment.c();
     			t0 = space();
-    			ion_buttons1 = element("ion-buttons");
-    			ion_button = element("ion-button");
+    			ion_fab0 = element("ion-fab");
+    			ion_fab_button0 = element("ion-fab-button");
     			ion_icon = element("ion-icon");
     			t1 = space();
     			div = element("div");
@@ -1125,45 +1229,45 @@ var app = (function () {
     			t2 = space();
     			ion_action_sheet_controller = element("ion-action-sheet-controller");
     			t3 = space();
-    			ion_fab = element("ion-fab");
-    			ion_fab_button = element("ion-fab-button");
+    			ion_fab1 = element("ion-fab");
+    			ion_fab_button1 = element("ion-fab-button");
     			span = element("span");
     			span.textContent = "+";
-    			set_custom_element_data(ion_buttons0, "slot", "start");
-    			add_location(ion_buttons0, file$2, 126, 4, 3271);
-    			set_custom_element_data(ion_icon, "slot", "icon-only");
-    			set_custom_element_data(ion_icon, "size", "large");
     			set_custom_element_data(ion_icon, "name", ion_icon_name_value = ctx.reorder ? 'reorder' : 'trash');
-    			set_custom_element_data(ion_icon, "color", "primary");
-    			add_location(ion_icon, file$2, 135, 8, 3679);
-    			add_location(ion_button, file$2, 134, 6, 3621);
-    			set_custom_element_data(ion_buttons1, "slot", "end");
-    			add_location(ion_buttons1, file$2, 132, 4, 3520);
-    			add_location(ion_toolbar, file$2, 125, 2, 3252);
+    			add_location(ion_icon, file$3, 108, 6, 3255);
+    			set_custom_element_data(ion_fab_button0, "id", "toggle");
+    			set_custom_element_data(ion_fab_button0, "class", "svelte-39eigu");
+    			toggle_class(ion_fab_button0, "reorder", ctx.reorder);
+    			add_location(ion_fab_button0, file$3, 107, 4, 3169);
+    			set_custom_element_data(ion_fab0, "vertical", "top");
+    			set_custom_element_data(ion_fab0, "horizontal", "end");
+    			set_custom_element_data(ion_fab0, "slot", "fixed");
+    			add_location(ion_fab0, file$3, 106, 2, 3108);
     			set_custom_element_data(ion_reorder_group, "id", "effects");
     			set_custom_element_data(ion_reorder_group, "slot", "fixed");
     			set_custom_element_data(ion_reorder_group, "disabled", ion_reorder_group_disabled_value = !ctx.reorder);
-    			set_custom_element_data(ion_reorder_group, "class", "svelte-1rybaz9");
-    			add_location(ion_reorder_group, file$2, 141, 4, 3882);
-    			attr_dev(div, "class", "center-effects svelte-1rybaz9");
-    			add_location(div, file$2, 140, 2, 3848);
-    			add_location(ion_action_sheet_controller, file$2, 148, 2, 4212);
+    			set_custom_element_data(ion_reorder_group, "class", "svelte-39eigu");
+    			add_location(ion_reorder_group, file$3, 114, 4, 3440);
+    			attr_dev(div, "class", "center-effects svelte-39eigu");
+    			add_location(div, file$3, 113, 2, 3406);
+    			add_location(ion_action_sheet_controller, file$3, 122, 2, 3819);
     			attr_dev(span, "class", "fab-text");
-    			add_location(span, file$2, 151, 72, 4471);
-    			set_custom_element_data(ion_fab_button, "disabled", ctx.fabButton);
-    			set_custom_element_data(ion_fab_button, "class", "svelte-1rybaz9");
-    			add_location(ion_fab_button, file$2, 151, 4, 4403);
-    			set_custom_element_data(ion_fab, "vertical", "bottom");
-    			set_custom_element_data(ion_fab, "horizontal", "end");
-    			set_custom_element_data(ion_fab, "slot", "fixed");
-    			add_location(ion_fab, file$2, 150, 2, 4339);
+    			add_location(span, file$3, 124, 72, 4037);
+    			set_custom_element_data(ion_fab_button1, "disabled", ctx.fabButton);
+    			set_custom_element_data(ion_fab_button1, "class", "svelte-39eigu");
+    			add_location(ion_fab_button1, file$3, 124, 4, 3969);
+    			set_custom_element_data(ion_fab1, "vertical", "bottom");
+    			set_custom_element_data(ion_fab1, "horizontal", "end");
+    			set_custom_element_data(ion_fab1, "slot", "fixed");
+    			add_location(ion_fab1, file$3, 123, 2, 3905);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file$2, 124, 0, 3218);
+    			set_custom_element_data(ion_content, "forceoverscroll", "true");
+    			add_location(ion_content, file$3, 102, 0, 2974);
 
     			dispose = [
-    				listen_dev(ion_button, "click", ctx.click_handler),
+    				listen_dev(ion_fab_button0, "click", ctx.click_handler),
     				listen_dev(ion_reorder_group, "ionItemReorder", ctx.ionItemReorder_handler),
-    				listen_dev(ion_fab_button, "click", ctx.openEffectSelection)
+    				listen_dev(ion_fab_button1, "click", ctx.openEffectSelection)
     			];
     		},
 
@@ -1173,12 +1277,11 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert_dev(target, ion_content, anchor);
-    			append_dev(ion_content, ion_toolbar);
-    			append_dev(ion_toolbar, ion_buttons0);
-    			append_dev(ion_toolbar, t0);
-    			append_dev(ion_toolbar, ion_buttons1);
-    			append_dev(ion_buttons1, ion_button);
-    			append_dev(ion_button, ion_icon);
+    			mount_component(toolbar, ion_content, null);
+    			append_dev(ion_content, t0);
+    			append_dev(ion_content, ion_fab0);
+    			append_dev(ion_fab0, ion_fab_button0);
+    			append_dev(ion_fab_button0, ion_icon);
     			append_dev(ion_content, t1);
     			append_dev(ion_content, div);
     			append_dev(div, ion_reorder_group);
@@ -1191,15 +1294,19 @@ var app = (function () {
     			append_dev(ion_content, ion_action_sheet_controller);
     			ctx.ion_action_sheet_controller_binding(ion_action_sheet_controller);
     			append_dev(ion_content, t3);
-    			append_dev(ion_content, ion_fab);
-    			append_dev(ion_fab, ion_fab_button);
-    			append_dev(ion_fab_button, span);
+    			append_dev(ion_content, ion_fab1);
+    			append_dev(ion_fab1, ion_fab_button1);
+    			append_dev(ion_fab_button1, span);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
     			if ((!current || changed.reorder) && ion_icon_name_value !== (ion_icon_name_value = ctx.reorder ? 'reorder' : 'trash')) {
     				set_custom_element_data(ion_icon, "name", ion_icon_name_value);
+    			}
+
+    			if (changed.reorder) {
+    				toggle_class(ion_fab_button0, "reorder", ctx.reorder);
     			}
 
     			if (changed.effects || changed.reorder) {
@@ -1232,12 +1339,14 @@ var app = (function () {
     			}
 
     			if (!current || changed.fabButton) {
-    				set_custom_element_data(ion_fab_button, "disabled", ctx.fabButton);
+    				set_custom_element_data(ion_fab_button1, "disabled", ctx.fabButton);
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(toolbar.$$.fragment, local);
+
     			for (let i = 0; i < each_value.length; i += 1) {
     				transition_in(each_blocks[i]);
     			}
@@ -1246,6 +1355,8 @@ var app = (function () {
     		},
 
     		o: function outro(local) {
+    			transition_out(toolbar.$$.fragment, local);
+
     			each_blocks = each_blocks.filter(Boolean);
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				transition_out(each_blocks[i]);
@@ -1259,13 +1370,15 @@ var app = (function () {
     				detach_dev(ion_content);
     			}
 
+    			destroy_component(toolbar);
+
     			destroy_each(each_blocks, detaching);
 
     			ctx.ion_action_sheet_controller_binding(null);
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$2.name, type: "component", source: "", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$3.name, type: "component", source: "", ctx });
     	return block;
     }
 
@@ -1323,63 +1436,40 @@ var app = (function () {
       function removeEffect(effect) {
         effect.effect.dispose();
         $$invalidate('effects', effects = effects.filter(t => t !== effect));
-      }
+      }//end removeEffect
 
+      //create action sheet with buttons to add each available effect
       let controller;
       function openEffectSelection() {
+        let controllerButtons = [];
+
+        for (let effect in availableEffects) {
+          let newButton = {
+            text: effect,
+            handler: () => {addNewEffect(effect);}
+          };
+          controllerButtons.push(newButton);
+        }//end for
+
+        console.log(controllerButtons);
+
         controller.create({
-            buttons: [{
-            text: '├',
-            handler: () => {
-              appendEffect('highpass');
-            }
-          }, {
-            text: '┤',
-            handler: () => {
-              appendEffect('lowpass');
-            }
-          }, {
-            text: '╫',
-            handler: () => {
-              appendEffect('reverb');
-            }
-          }, {
-            text: '║',
-            handler: () => {
-              appendEffect('delay');
-            }
-          }, {
-            text: '╧',
-            handler: () => {
-              appendEffect('distortion');
-            }
-          }, {
-            text: '╪',
-            handler: () => {
-              appendEffect('pitchshift');
-            }
-          }, {
-            text: '‡',
-            handler: () => {
-              appendEffect('ringmod');
-            }
-          }, {
-            text: 'X',
-            role: 'cancel'
-          }]
+          buttons: [...controllerButtons, {text: 'X', role: 'cancel'}]
         }).then(actionSheet => {
           actionSheet.cssClass = "effect-selection";
           actionSheet.present();
-        });
-      }
+        });//end controller.create
+      }//end openEffectSelection
 
-      function appendEffect(chosenEffect) {
-        $$invalidate('effects', effects = [...effects, {name : chosenEffect, effect : availableEffects[chosenEffect].getEffect(), x : 0, y : 0}]);
-      }//end appendEffect
+      function addNewEffect(effect) {
+        $$invalidate('effects', effects = [...effects, {name : effect,
+                                effect : availableEffects[effect].getEffect(),
+                                shrink: false}]);
+      }//end addNewEffect
 
     	const writable_props = ['maxEffects'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<EffectsTab> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1.warn(`<EffectsTab> was created with unknown prop '${key}'`);
     	});
 
     	const click_handler = () => $$invalidate('reorder', reorder = !reorder);
@@ -1416,7 +1506,7 @@ var app = (function () {
     		if ($$dirty.effects || $$dirty.maxEffects) { $$invalidate('fabButton', fabButton = effects.length < maxEffects ? false : true); }
     		if ($$dirty.effects) { effects.forEach(function(effect, i) {
             if(i == 0)
-              mic.connect(effect);
+              //mic.connect(effect);
         
             if(i != effects.length - 1) {
               effect.effect.disconnect();
@@ -1445,8 +1535,8 @@ var app = (function () {
     class EffectsTab extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["maxEffects"]);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "EffectsTab", options, id: create_fragment$2.name });
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, ["maxEffects"]);
+    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "EffectsTab", options, id: create_fragment$3.name });
     	}
 
     	get maxEffects() {
@@ -1460,10 +1550,10 @@ var app = (function () {
 
     /* src\App.svelte generated by Svelte v3.12.0 */
 
-    const file$3 = "src\\App.svelte";
+    const file$4 = "src\\App.svelte";
 
-    function create_fragment$3(ctx) {
-    	var script0, script1, link, t0, ion_app, ion_tabs, ion_tab0, t1, ion_tab1, t2, ion_tab_bar, ion_tab_button0, i0, t4, ion_tab_button1, i1, t6, ion_modal_controller, current, dispose;
+    function create_fragment$4(ctx) {
+    	var script0, script1, link, t0, ion_app, ion_tabs, ion_tab0, t1, ion_tab1, t2, ion_tab_bar, ion_tab_button0, ion_icon0, t3, ion_tab_button1, ion_icon1, t4, ion_modal_controller, current, dispose;
 
     	var instrumenttab = new InstrumentTab({ $$inline: true });
 
@@ -1488,51 +1578,51 @@ var app = (function () {
     			t2 = space();
     			ion_tab_bar = element("ion-tab-bar");
     			ion_tab_button0 = element("ion-tab-button");
-    			i0 = element("i");
-    			i0.textContent = "fiber_manual_record";
-    			t4 = space();
+    			ion_icon0 = element("ion-icon");
+    			t3 = space();
     			ion_tab_button1 = element("ion-tab-button");
-    			i1 = element("i");
-    			i1.textContent = "stop";
-    			t6 = space();
+    			ion_icon1 = element("ion-icon");
+    			t4 = space();
     			ion_modal_controller = element("ion-modal-controller");
     			attr_dev(script0, "type", "module");
     			attr_dev(script0, "src", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/dist/ionic/ionic.esm.js");
     			attr_dev(script0, "class", "svelte-d5ddq3");
-    			add_location(script0, file$3, 1, 1, 15);
+    			add_location(script0, file$4, 1, 1, 15);
     			script1.noModule = true;
     			attr_dev(script1, "src", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/dist/ionic/ionic.js");
     			attr_dev(script1, "class", "svelte-d5ddq3");
-    			add_location(script1, file$3, 2, 1, 125);
+    			add_location(script1, file$4, 2, 1, 125);
     			attr_dev(link, "rel", "stylesheet");
     			attr_dev(link, "href", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/css/ionic.bundle.css");
     			attr_dev(link, "class", "svelte-d5ddq3");
-    			add_location(link, file$3, 3, 1, 226);
+    			add_location(link, file$4, 3, 1, 226);
     			set_custom_element_data(ion_tab0, "tab", "tab-instrument");
     			set_custom_element_data(ion_tab0, "class", "svelte-d5ddq3");
-    			add_location(ion_tab0, file$3, 20, 2, 677);
+    			add_location(ion_tab0, file$4, 20, 2, 677);
     			set_custom_element_data(ion_tab1, "tab", "tab-effects-routing");
     			set_custom_element_data(ion_tab1, "class", "svelte-d5ddq3");
-    			add_location(ion_tab1, file$3, 24, 2, 746);
-    			attr_dev(i0, "class", "material-icons svelte-d5ddq3");
-    			add_location(i0, file$3, 30, 4, 904);
+    			add_location(ion_tab1, file$4, 24, 2, 746);
+    			set_custom_element_data(ion_icon0, "name", "volume-high");
+    			set_custom_element_data(ion_icon0, "class", "svelte-d5ddq3");
+    			add_location(ion_icon0, file$4, 30, 4, 904);
     			set_custom_element_data(ion_tab_button0, "tab", "tab-instrument");
     			set_custom_element_data(ion_tab_button0, "class", "svelte-d5ddq3");
-    			add_location(ion_tab_button0, file$3, 29, 3, 862);
-    			attr_dev(i1, "class", "material-icons svelte-d5ddq3");
-    			add_location(i1, file$3, 34, 4, 1026);
+    			add_location(ion_tab_button0, file$4, 29, 3, 862);
+    			set_custom_element_data(ion_icon1, "name", "funnel");
+    			set_custom_element_data(ion_icon1, "class", "svelte-d5ddq3");
+    			add_location(ion_icon1, file$4, 34, 4, 1017);
     			set_custom_element_data(ion_tab_button1, "tab", "tab-effects-routing");
     			set_custom_element_data(ion_tab_button1, "class", "svelte-d5ddq3");
-    			add_location(ion_tab_button1, file$3, 33, 3, 979);
+    			add_location(ion_tab_button1, file$4, 33, 3, 970);
     			set_custom_element_data(ion_tab_bar, "slot", "bottom");
     			set_custom_element_data(ion_tab_bar, "class", "svelte-d5ddq3");
-    			add_location(ion_tab_bar, file$3, 28, 2, 831);
+    			add_location(ion_tab_bar, file$4, 28, 2, 831);
     			set_custom_element_data(ion_tabs, "class", "svelte-d5ddq3");
-    			add_location(ion_tabs, file$3, 19, 1, 664);
+    			add_location(ion_tabs, file$4, 19, 1, 664);
     			set_custom_element_data(ion_modal_controller, "class", "svelte-d5ddq3");
-    			add_location(ion_modal_controller, file$3, 39, 1, 1157);
+    			add_location(ion_modal_controller, file$4, 39, 1, 1149);
     			set_custom_element_data(ion_app, "class", "svelte-d5ddq3");
-    			add_location(ion_app, file$3, 18, 0, 653);
+    			add_location(ion_app, file$4, 18, 0, 653);
 
     			dispose = [
     				listen_dev(window, "touchstart", startContext, { once: true }),
@@ -1560,11 +1650,11 @@ var app = (function () {
     			append_dev(ion_tabs, t2);
     			append_dev(ion_tabs, ion_tab_bar);
     			append_dev(ion_tab_bar, ion_tab_button0);
-    			append_dev(ion_tab_button0, i0);
-    			append_dev(ion_tab_bar, t4);
+    			append_dev(ion_tab_button0, ion_icon0);
+    			append_dev(ion_tab_bar, t3);
     			append_dev(ion_tab_bar, ion_tab_button1);
-    			append_dev(ion_tab_button1, i1);
-    			append_dev(ion_app, t6);
+    			append_dev(ion_tab_button1, ion_icon1);
+    			append_dev(ion_app, t4);
     			append_dev(ion_app, ion_modal_controller);
     			current = true;
     		},
@@ -1603,7 +1693,7 @@ var app = (function () {
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$3.name, type: "component", source: "", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$4.name, type: "component", source: "", ctx });
     	return block;
     }
 
@@ -1614,8 +1704,8 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$3, safe_not_equal, []);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "App", options, id: create_fragment$3.name });
+    		init(this, options, null, create_fragment$4, safe_not_equal, []);
+    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "App", options, id: create_fragment$4.name });
     	}
     }
 

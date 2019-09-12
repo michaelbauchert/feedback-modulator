@@ -32,6 +32,9 @@
 		const ctx = canvas.getContext('2d');
     const copyCtx = copy.getContext('2d');
 
+    ctx.fillStyle = "#4ecca3";
+    copyCtx.fillStyle = "#4ecca3";
+
     $: canvas.width  = canvas.clientWidth;
     $: canvas.height = canvas.clientHeight;
 
@@ -40,7 +43,7 @@
 
     let frame;
 
-    (function loop() {
+    function loop() {
     	frame = requestAnimationFrame(loop);
 
       copyCtx.globalAlpha = .9;
@@ -67,7 +70,9 @@
         }
       }
       ctx.stroke();
-    });
+    };
+
+    loop();
   });
 </script>
 

@@ -100,7 +100,7 @@
   }//end addNewEffect
 </script>
 
-<ion-content scroll-y="false">
+<ion-content scroll-y="false" forceOverscroll="true">
   <Toolbar/>
 
   <!-- Button to Toggle Between Reorder and Trash Modes -->
@@ -133,13 +133,12 @@
   }
 
   .center-effects {
-    position: absolute;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    top: 0;
+    height: calc(100% - 53px);
+    width: 100%;
   }
 
   ion-fab-button {
@@ -189,6 +188,6 @@
   .reorder {
     --color: var(--ion-color-primary) !important;
     --color-activated: var(--ion-color-primary) !important;
-    --background-hover: var(--ion-color-primary) !important;        
+    --background-hover: var(--ion-color-primary) !important;
   }
 </style>
