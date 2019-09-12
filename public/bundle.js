@@ -685,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 88, 2, 2528);
+    			add_location(canvas0, file, 86, 2, 2531);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 94, 2, 2787);
+    			add_location(canvas1, file, 92, 2, 2790);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 87, 0, 2494);
+    			add_location(ion_content, file, 85, 0, 2497);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -785,8 +785,6 @@ var app = (function () {
 
           let points = $springyPoints;
 
-          console.log(points);
-
           ctx.strokeStyle = "#4ecca3";
           copyCtx.strokeStyle = "#4ecca3";
 
@@ -802,7 +800,7 @@ var app = (function () {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           //copy old image from copy canvas to display canvas
-          const zoomfactor = 0.98; //set whatever you want as zoom factor
+          const zoomfactor = 0.9; //set whatever you want as zoom factor
           ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
           //draw new lines
@@ -850,7 +848,7 @@ var app = (function () {
     	let springyPoints;
 
     	$$self.$$.update = ($$dirty = { currentPoints: 1 }) => {
-    		if ($$dirty.currentPoints) { $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = spring(currentPoints))); }
+    		if ($$dirty.currentPoints) { $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = spring(currentPoints, {stiffness: 0.13, damping: 0.13}))); }
     	};
 
     	return {
