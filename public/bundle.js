@@ -539,12 +539,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 80, 2, 2281);
+    			add_location(canvas0, file, 80, 2, 2285);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 86, 2, 2540);
+    			add_location(canvas1, file, 86, 2, 2544);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 79, 0, 2247);
+    			add_location(ion_content, file, 79, 0, 2251);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -622,9 +622,6 @@ var app = (function () {
     		const ctx = canvas.getContext('2d');
         const copyCtx = copy.getContext('2d');
 
-        ctx.strokeStyle = "#4ecca3";
-        copyCtx.strokeStyle = "#4ecca3";
-
         $: $$invalidate('canvas', canvas.width  = canvas.clientWidth, canvas);
         $: $$invalidate('canvas', canvas.height = canvas.clientHeight, canvas);
 
@@ -636,7 +633,10 @@ var app = (function () {
         function loop() {
         	frame = requestAnimationFrame(loop);
 
-          copyCtx.globalAlpha = .9;
+          ctx.strokeStyle = "#4ecca3";
+          copyCtx.strokeStyle = "#4ecca3";
+
+          copyCtx.globalAlpha = .99;
 
           //clear copy canvas
           copyCtx.clearRect(0, 0, copy.width, copy.height);
@@ -648,7 +648,7 @@ var app = (function () {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           //copy old image from copy canvas to display canvas
-          const zoomfactor = 0.98; //set whatever you want as zoom factor
+          const zoomfactor = 0.8; //set whatever you want as zoom factor
           ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
           //draw new lines
