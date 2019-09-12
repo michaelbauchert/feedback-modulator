@@ -48,7 +48,6 @@
 		--ion-tab-bar-color: var(--ion-color-secondary);
 		--ion-tab-bar-background: var(--ion-color-tertiary);
 
-
 		--ion-color-primary: #4ecca3;
 		--ion-color-primary-rgb: 78,204,163;
 		--ion-color-primary-contrast: #000000;

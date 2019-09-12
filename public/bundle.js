@@ -685,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 85, 2, 2494);
+    			add_location(canvas0, file, 85, 2, 2496);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 91, 2, 2753);
+    			add_location(canvas1, file, 91, 2, 2755);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 84, 0, 2460);
+    			add_location(ion_content, file, 84, 0, 2462);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -740,7 +740,7 @@ var app = (function () {
 
       let canvas;
       let copy;
-      let springyPoints = spring([], {stiffness: 1, damping: 0.1}); validate_store(springyPoints, 'springyPoints'); component_subscribe($$self, springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); });
+      let springyPoints = spring([], {stiffness: 0.9, damping: 0.1}); validate_store(springyPoints, 'springyPoints'); component_subscribe($$self, springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); });
 
       function setTouchDryWet(dryWet, event) {
         const newTouches = event.targetTouches;
@@ -1738,42 +1738,42 @@ var app = (function () {
     			ion_modal_controller = element("ion-modal-controller");
     			attr_dev(script0, "type", "module");
     			attr_dev(script0, "src", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/dist/ionic/ionic.esm.js");
-    			attr_dev(script0, "class", "svelte-d5ddq3");
+    			attr_dev(script0, "class", "svelte-1u1aich");
     			add_location(script0, file$4, 1, 1, 15);
     			script1.noModule = true;
     			attr_dev(script1, "src", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/dist/ionic/ionic.js");
-    			attr_dev(script1, "class", "svelte-d5ddq3");
+    			attr_dev(script1, "class", "svelte-1u1aich");
     			add_location(script1, file$4, 2, 1, 125);
     			attr_dev(link, "rel", "stylesheet");
     			attr_dev(link, "href", "https://cdn.jsdelivr.net/npm/@ionic/core@4.9.0/css/ionic.bundle.css");
-    			attr_dev(link, "class", "svelte-d5ddq3");
+    			attr_dev(link, "class", "svelte-1u1aich");
     			add_location(link, file$4, 3, 1, 226);
     			set_custom_element_data(ion_tab0, "tab", "tab-instrument");
-    			set_custom_element_data(ion_tab0, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tab0, "class", "svelte-1u1aich");
     			add_location(ion_tab0, file$4, 20, 2, 677);
     			set_custom_element_data(ion_tab1, "tab", "tab-effects-routing");
-    			set_custom_element_data(ion_tab1, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tab1, "class", "svelte-1u1aich");
     			add_location(ion_tab1, file$4, 24, 2, 746);
     			set_custom_element_data(ion_icon0, "name", "volume-high");
-    			set_custom_element_data(ion_icon0, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_icon0, "class", "svelte-1u1aich");
     			add_location(ion_icon0, file$4, 30, 4, 904);
     			set_custom_element_data(ion_tab_button0, "tab", "tab-instrument");
-    			set_custom_element_data(ion_tab_button0, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tab_button0, "class", "svelte-1u1aich");
     			add_location(ion_tab_button0, file$4, 29, 3, 862);
     			set_custom_element_data(ion_icon1, "name", "funnel");
-    			set_custom_element_data(ion_icon1, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_icon1, "class", "svelte-1u1aich");
     			add_location(ion_icon1, file$4, 34, 4, 1017);
     			set_custom_element_data(ion_tab_button1, "tab", "tab-effects-routing");
-    			set_custom_element_data(ion_tab_button1, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tab_button1, "class", "svelte-1u1aich");
     			add_location(ion_tab_button1, file$4, 33, 3, 970);
     			set_custom_element_data(ion_tab_bar, "slot", "bottom");
-    			set_custom_element_data(ion_tab_bar, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tab_bar, "class", "svelte-1u1aich");
     			add_location(ion_tab_bar, file$4, 28, 2, 831);
-    			set_custom_element_data(ion_tabs, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_tabs, "class", "svelte-1u1aich");
     			add_location(ion_tabs, file$4, 19, 1, 664);
-    			set_custom_element_data(ion_modal_controller, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_modal_controller, "class", "svelte-1u1aich");
     			add_location(ion_modal_controller, file$4, 39, 1, 1149);
-    			set_custom_element_data(ion_app, "class", "svelte-d5ddq3");
+    			set_custom_element_data(ion_app, "class", "svelte-1u1aich");
     			add_location(ion_app, file$4, 18, 0, 653);
 
     			dispose = [
