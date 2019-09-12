@@ -9,7 +9,7 @@
                               {x: 0, y: 0},
                               {x: 0, y: 0},
                               {x: 0, y: 0},
-                              {x: 0, y: 0}], {stiffness: 0.25, damping: 0.1});
+                              {x: 0, y: 0}], {stiffness: 0.6, damping: 0.3});
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
