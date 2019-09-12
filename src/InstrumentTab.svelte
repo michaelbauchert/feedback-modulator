@@ -43,6 +43,8 @@
   }
   onMount(() => {
 		const ctx = canvas.getContext('2d');
+    ctx.globalCompositeOperation = 'darken';
+
     const copyCtx = copy.getContext('2d');
 
     $: canvas.width  = canvas.clientWidth;
@@ -58,14 +60,6 @@
 
       ctx.strokeStyle = "#4ecca3";
       copyCtx.strokeStyle = "#4ecca3";
-
-      copyCtx.globalAlpha = .85;
-
-      //clear copy canvas
-      copyCtx.clearRect(0, 0, copy.width, copy.height);
-
-      //copy drawing from display canvas to copy canvas
-      copyCtx.drawImage(canvas, 0, 0);
 
       //clear display canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -86,6 +80,17 @@
         ctx.stroke();
       }
     };
+
+    copyCtx.globalAlpha = .85;
+
+    //clear copy canvas
+    copyCtx.clearRect(0, 0, copy.width, copy.height);
+
+    //copy drawing from display canvas to copy canvas
+    copyCtx.drawImage(canvas, 0, 0);
+
+    ctx.fillStyle = "#232931";
+    ctx.fill();
 
     loop();
   });
