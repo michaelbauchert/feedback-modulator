@@ -5,7 +5,7 @@
 
   let canvas;
   let copy;
-  let springyPoints = spring([], {stiffness: 0.13, damping: 0.13});
+  let springyPoints = spring([], {stiffness: 1, damping: 0.1});
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;

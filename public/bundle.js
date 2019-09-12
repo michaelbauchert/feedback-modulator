@@ -685,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 85, 2, 2498);
+    			add_location(canvas0, file, 85, 2, 2494);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 91, 2, 2757);
+    			add_location(canvas1, file, 91, 2, 2753);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 84, 0, 2464);
+    			add_location(ion_content, file, 84, 0, 2460);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -740,7 +740,7 @@ var app = (function () {
 
       let canvas;
       let copy;
-      let springyPoints = spring([], {stiffness: 0.13, damping: 0.13}); validate_store(springyPoints, 'springyPoints'); component_subscribe($$self, springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); });
+      let springyPoints = spring([], {stiffness: 1, damping: 0.1}); validate_store(springyPoints, 'springyPoints'); component_subscribe($$self, springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); });
 
       function setTouchDryWet(dryWet, event) {
         const newTouches = event.targetTouches;
