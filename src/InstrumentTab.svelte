@@ -5,7 +5,11 @@
 
   let canvas;
   let copy;
-  let springyPoints = spring([], {stiffness: 0.13, damping: 0.13});
+  let springyPoints = spring([{x: 0, y: 0},
+                              {x: 0, y: 0},
+                              {x: 0, y: 0},
+                              {x: 0, y: 0},
+                              {x: 0, y: 0}], {stiffness: 0.25, damping: 0.1});
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
@@ -26,8 +30,14 @@
       currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;
       currentTouches[i].y = newTouches[i].clientY / canvas.clientHeight;
 
-      newPoints.push({x: newTouches[i].clientX, y: newTouches[i].clientY});
+      newPoints = [...newPoints, {x: newTouches[i].clientX, y: newTouches[i].clientY}];
     }
+
+    //zero out the unused points
+    for(let i = newPoints.length; i < $springyPoints.length; i++) {
+      newPoints = [...newPoints, {x: canvas.clientWidth / 2, y: canvas.clientHeight / 2}];
+    }
+
     springyPoints.set(newPoints);
     touches.set(currentTouches);
   }
@@ -46,12 +56,10 @@
     function loop() {
     	frame = requestAnimationFrame(loop);
 
-      let points = $springyPoints;
-
       ctx.strokeStyle = "#4ecca3";
       copyCtx.strokeStyle = "#4ecca3";
 
-      copyCtx.globalAlpha = .9;
+      copyCtx.globalAlpha = .85;
 
       //clear copy canvas
       copyCtx.clearRect(0, 0, copy.width, copy.height);
@@ -63,15 +71,15 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       //copy old image from copy canvas to display canvas
-      const zoomfactor = 0.85; //set whatever you want as zoom factor
+      const zoomfactor = 0.9; //set whatever you want as zoom factor
       ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
       //draw new lines
       ctx.beginPath();
-      for(let i=0; i<points.length; i++) {
-        for(let j=i+1; j<points.length; j++) {
-          ctx.moveTo(points[i].x, points[i].y);
-          ctx.lineTo(points[j].x, points[j].y);
+      for(let i=0; i<$springyPoints.length; i++) {
+        for(let j=i+1; j<$springyPoints.length; j++) {
+          ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
+          ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
         }
       }
       ctx.stroke();
