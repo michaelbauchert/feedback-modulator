@@ -4,6 +4,7 @@
 
   let canvas;
   let copy;
+  let points = [];
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
@@ -18,6 +19,7 @@
 
   function updateTouchPositions(event) {
     const newTouches = event.targetTouches;
+    points = newTouches;
     for(let i = 0; i < newTouches.length; i++) {
       let currentTouches = $touches;
       currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;

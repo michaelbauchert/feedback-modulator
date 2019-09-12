@@ -132,11 +132,16 @@
     font-size: calc(var(--symbol-button) / 3);
     text-align: center;
 
+
     box-shadow: inset -5px -7px 10px var(--ion-color-dark-tint);
 
-    background-color: var(--ion-color-primary);
     border-radius: 50%;
     border: 0px;
+  }
+
+  ion-button {    
+    --background: var(--ion-color-primary) !important;
+    --background-activated: var(--ion-color-primary) !important;
   }
 
   ion-item-options {

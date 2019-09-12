@@ -1,5 +1,6 @@
 <script>
   import AudioEffect from './AudioEffect.svelte';
+  import Toolbar from './Toolbar.svelte';
   import Tone from 'tone';
 
   const availableEffects = {
@@ -52,7 +53,7 @@
   //reorder effects every time they're updated
   $: effects.forEach(function(effect, i) {
     if(i == 0)
-      mic.connect(effect);
+      //mic.connect(effect);
 
     if(i != effects.length - 1) {
       effect.effect.disconnect();
@@ -67,77 +68,49 @@
   function removeEffect(effect) {
     effect.effect.dispose();
     effects = effects.filter(t => t !== effect);
-  }
+  }//end removeEffect
 
+  //create action sheet with buttons to add each available effect
   let controller;
   function openEffectSelection() {
+    let controllerButtons = [];
+
+    for (let effect in availableEffects) {
+      let newButton = {
+        text: effect,
+        handler: () => {addNewEffect(effect)}
+      };
+      controllerButtons.push(newButton);
+    }//end for
+
+    console.log(controllerButtons);
+
     controller.create({
-        buttons: [{
-        text: '├',
-        handler: () => {
-          appendEffect('highpass');
-        }
-      }, {
-        text: '┤',
-        handler: () => {
-          appendEffect('lowpass');
-        }
-      }, {
-        text: '╫',
-        handler: () => {
-          appendEffect('reverb');
-        }
-      }, {
-        text: '║',
-        handler: () => {
-          appendEffect('delay');
-        }
-      }, {
-        text: '╧',
-        handler: () => {
-          appendEffect('distortion');
-        }
-      }, {
-        text: '╪',
-        handler: () => {
-          appendEffect('pitchshift');
-        }
-      }, {
-        text: '‡',
-        handler: () => {
-          appendEffect('ringmod');
-        }
-      }, {
-        text: 'X',
-        role: 'cancel'
-      }]
+      buttons: [...controllerButtons, {text: 'X', role: 'cancel'}]
     }).then(actionSheet => {
       actionSheet.cssClass = "effect-selection";
       actionSheet.present();
-    });
-  }
+    });//end controller.create
+  }//end openEffectSelection
 
-  function appendEffect(chosenEffect) {
-    effects = [...effects, {name : chosenEffect, effect : availableEffects[chosenEffect].getEffect(), x : 0, y : 0}];
-  }//end appendEffect
+  function addNewEffect(effect) {
+    effects = [...effects, {name : effect,
+                            effect : availableEffects[effect].getEffect(),
+                            shrink: false}];
+  }//end addNewEffect
 </script>
 
 <ion-content scroll-y="false">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <!--
-        <ion-icon slot="icon-only" name="information-circle-outline" color="primary"></ion-icon>
-        <ion-icon slot="icon-only" name="card" color="primary"></ion-icon>
-      -->
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <!--Button to toggle between Reordering and Deletion Modes-->
-      <ion-button on:click={() => reorder = !reorder}>
-        <ion-icon slot="icon-only" size="large" name={reorder ? 'reorder' : 'trash'} color="primary"></ion-icon>
-      </ion-button>
+  <Toolbar/>
 
-    </ion-buttons>
-  </ion-toolbar>
+  <!-- Button to Toggle Between Reorder and Trash Modes -->
+  <ion-fab vertical="top" horizontal="end" slot="fixed" >
+    <ion-fab-button id="toggle" class:reorder on:click={() => reorder = !reorder}>
+      <ion-icon name={reorder ? 'reorder' : 'trash'}></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Container of Currently Active Effects -->
   <div class="center-effects">
     <ion-reorder-group id="effects" slot="fixed" disabled={!reorder} on:ionItemReorder={({detail}) => effects = detail.complete(effects)}>
       {#each effects as effect, i}
@@ -146,11 +119,12 @@
     </ion-reorder-group>
   </div>
 
+  <!-- Controller and Button Add New Effects-->
   <ion-action-sheet-controller bind:this={controller}></ion-action-sheet-controller>
-  <!-- fab placed to the bottom end -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
     <ion-fab-button on:click={openEffectSelection} disabled={fabButton}><span class="fab-text" >+</span></ion-fab-button>
   </ion-fab>
+
 </ion-content>
 
 <style>
@@ -201,5 +175,20 @@
 
   .disable-element {
     display: none;
+  }
+
+  #toggle {
+    --background: var(--ion-color-dark);
+    --color: var(--ion-color-danger);
+    --color-activated: var(--ion-color-danger);
+
+    --background-hover: var(--ion-color-danger);
+    --color-hover: var(--ion-color-dark);
+  }
+
+  .reorder {
+    --color: var(--ion-color-primary) !important;
+    --color-activated: var(--ion-color-primary) !important;
+    --background-hover: var(--ion-color-primary) !important;        
   }
 </style>

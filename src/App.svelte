@@ -28,11 +28,11 @@
 
 		<ion-tab-bar slot="bottom">
 			<ion-tab-button tab="tab-instrument">
-				<i class="material-icons">fiber_manual_record</i>
+				<ion-icon name="volume-high"></ion-icon>
 			</ion-tab-button>
 
 			<ion-tab-button tab="tab-effects-routing">
-				<i class="material-icons">stop</i>
+				<ion-icon name="funnel"></ion-icon>
 			</ion-tab-button>
 		</ion-tab-bar>
 	</ion-tabs>
