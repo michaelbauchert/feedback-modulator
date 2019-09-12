@@ -43,7 +43,6 @@
   }
   onMount(() => {
 		const ctx = canvas.getContext('2d');
-    ctx.globalCompositeOperation = 'exclusion';
 
     const copyCtx = copy.getContext('2d');
 
@@ -61,17 +60,6 @@
       ctx.strokeStyle = "#4ecca3";
       copyCtx.strokeStyle = "#4ecca3";
 
-      copyCtx.globalAlpha = .85;
-
-      //clear copy canvas
-      copyCtx.clearRect(0, 0, copy.width, copy.height);
-
-      //copy drawing from display canvas to copy canvas
-      copyCtx.drawImage(canvas, 0, 0);
-
-      ctx.fillStyle = "#eeeeee";
-      ctx.fill();
-
       //clear display canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -82,15 +70,29 @@
       if(touchLength > 0) {
         //draw new lines
         ctx.beginPath();
-        for(let i=0; i<touchLength; i++) {
-          for(let j=i+1; j<touchLength; j++) {
-            ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
-            ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
-          }
+        ctx.moveTo($springyPoints[0].x, $springyPoints[0].y);
+        for(let i=1; i< $springyPoints.length; i++) {
+          ctx.lineTo($springyPoints[i].x, $springyPoints[i].y);
         }
+        ctx.closePath();
         ctx.stroke();
+
+        copyCtx.globalAlpha = .85;
+
+        //clear copy canvas
+        copyCtx.clearRect(0, 0, copy.width, copy.height);
+
+        //copy drawing from display canvas to copy canvas
+        copyCtx.drawImage(canvas, 0, 0);
+
+        ctx.globalCompositeOperation = 'hue';
+
+        ctx.fillStyle = "#232931";
+        ctx.fill();
       }
     };
+
+
 
     loop();
   });
