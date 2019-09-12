@@ -1,10 +1,12 @@
 <script>
   import { onMount } from 'svelte';
   import { touches } from './touch store.js';
+  import { spring } from 'svelte/motion';
 
   let canvas;
   let copy;
-  let points = [];
+  let currentPoints = [];
+  $: springyPoints = spring(currentPoints);
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
@@ -19,14 +21,16 @@
 
   function updateTouchPositions(event) {
     const newTouches = event.targetTouches;
-    points = newTouches;
+    let newPoints = [];
+    let currentTouches = $touches;
     for(let i = 0; i < newTouches.length; i++) {
-      let currentTouches = $touches;
       currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;
       currentTouches[i].y = newTouches[i].clientY / canvas.clientHeight;
 
-      touches.set(currentTouches);
+      newPoints.push({x: newTouches[i].clientX, y: newTouches[i].clientY});
     }
+    currentPoints = newPoints;
+    touches.set(currentTouches);
   }
   onMount(() => {
 		const ctx = canvas.getContext('2d');
@@ -43,10 +47,12 @@
     function loop() {
     	frame = requestAnimationFrame(loop);
 
+      let points = $springyPoints;
+
       ctx.strokeStyle = "#4ecca3";
       copyCtx.strokeStyle = "#4ecca3";
 
-      copyCtx.globalAlpha = .99;
+      copyCtx.globalAlpha = .9;
 
       //clear copy canvas
       copyCtx.clearRect(0, 0, copy.width, copy.height);
@@ -58,7 +64,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       //copy old image from copy canvas to display canvas
-      const zoomfactor = 0.8; //set whatever you want as zoom factor
+      const zoomfactor = 0.98; //set whatever you want as zoom factor
       ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
       //draw new lines

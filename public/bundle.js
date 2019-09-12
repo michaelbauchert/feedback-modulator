@@ -43,6 +43,41 @@ var app = (function () {
         component.$$.on_destroy.push(subscribe(store, callback));
     }
 
+    const is_client = typeof window !== 'undefined';
+    let now = is_client
+        ? () => window.performance.now()
+        : () => Date.now();
+    let raf = is_client ? cb => requestAnimationFrame(cb) : noop;
+
+    const tasks = new Set();
+    let running = false;
+    function run_tasks() {
+        tasks.forEach(task => {
+            if (!task[0](now())) {
+                tasks.delete(task);
+                task[1]();
+            }
+        });
+        running = tasks.size > 0;
+        if (running)
+            raf(run_tasks);
+    }
+    function loop(fn) {
+        let task;
+        if (!running) {
+            running = true;
+            raf(run_tasks);
+        }
+        return {
+            promise: new Promise(fulfil => {
+                tasks.add(task = [fn, fulfil]);
+            }),
+            abort() {
+                tasks.delete(task);
+            }
+        };
+    }
+
     function append(target, node) {
         target.appendChild(node);
     }
@@ -524,6 +559,117 @@ var app = (function () {
                                      {x: 0, y: 0, wet: 0},
                                      {x: 0, y: 0, wet: 0}]);
 
+    function is_date(obj) {
+        return Object.prototype.toString.call(obj) === '[object Date]';
+    }
+
+    function tick_spring(ctx, last_value, current_value, target_value) {
+        if (typeof current_value === 'number' || is_date(current_value)) {
+            // @ts-ignore
+            const delta = target_value - current_value;
+            // @ts-ignore
+            const velocity = (current_value - last_value) / (ctx.dt || 1 / 60); // guard div by 0
+            const spring = ctx.opts.stiffness * delta;
+            const damper = ctx.opts.damping * velocity;
+            const acceleration = (spring - damper) * ctx.inv_mass;
+            const d = (velocity + acceleration) * ctx.dt;
+            if (Math.abs(d) < ctx.opts.precision && Math.abs(delta) < ctx.opts.precision) {
+                return target_value; // settled
+            }
+            else {
+                ctx.settled = false; // signal loop to keep ticking
+                // @ts-ignore
+                return is_date(current_value) ?
+                    new Date(current_value.getTime() + d) : current_value + d;
+            }
+        }
+        else if (Array.isArray(current_value)) {
+            // @ts-ignore
+            return current_value.map((_, i) => tick_spring(ctx, last_value[i], current_value[i], target_value[i]));
+        }
+        else if (typeof current_value === 'object') {
+            const next_value = {};
+            for (const k in current_value)
+                // @ts-ignore
+                next_value[k] = tick_spring(ctx, last_value[k], current_value[k], target_value[k]);
+            // @ts-ignore
+            return next_value;
+        }
+        else {
+            throw new Error(`Cannot spring ${typeof current_value} values`);
+        }
+    }
+    function spring(value, opts = {}) {
+        const store = writable(value);
+        const { stiffness = 0.15, damping = 0.8, precision = 0.01 } = opts;
+        let last_time;
+        let task;
+        let current_token;
+        let last_value = value;
+        let target_value = value;
+        let inv_mass = 1;
+        let inv_mass_recovery_rate = 0;
+        let cancel_task = false;
+        /* eslint-disable @typescript-eslint/no-use-before-define */
+        function set(new_value, opts = {}) {
+            target_value = new_value;
+            const token = current_token = {};
+            if (opts.hard || (spring.stiffness >= 1 && spring.damping >= 1)) {
+                cancel_task = true; // cancel any running animation
+                last_time = now();
+                last_value = value;
+                store.set(value = target_value);
+                return new Promise(f => f()); // fulfil immediately
+            }
+            else if (opts.soft) {
+                const rate = opts.soft === true ? .5 : +opts.soft;
+                inv_mass_recovery_rate = 1 / (rate * 60);
+                inv_mass = 0; // infinite mass, unaffected by spring forces
+            }
+            if (!task) {
+                last_time = now();
+                cancel_task = false;
+                task = loop(now => {
+                    if (cancel_task) {
+                        cancel_task = false;
+                        task = null;
+                        return false;
+                    }
+                    inv_mass = Math.min(inv_mass + inv_mass_recovery_rate, 1);
+                    const ctx = {
+                        inv_mass,
+                        opts: spring,
+                        settled: true,
+                        dt: (now - last_time) * 60 / 1000
+                    };
+                    const next_value = tick_spring(ctx, last_value, value, target_value);
+                    last_time = now;
+                    last_value = value;
+                    store.set(value = next_value);
+                    if (ctx.settled)
+                        task = null;
+                    return !ctx.settled;
+                });
+            }
+            return new Promise(fulfil => {
+                task.promise.then(() => {
+                    if (token === current_token)
+                        fulfil();
+                });
+            });
+        }
+        /* eslint-enable @typescript-eslint/no-use-before-define */
+        const spring = {
+            set,
+            update: (fn, opts) => set(fn(target_value, value), opts),
+            subscribe: store.subscribe,
+            stiffness,
+            damping,
+            precision
+        };
+        return spring;
+    }
+
     /* src\InstrumentTab.svelte generated by Svelte v3.12.0 */
 
     const file = "src\\InstrumentTab.svelte";
@@ -539,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 80, 2, 2285);
+    			add_location(canvas0, file, 86, 2, 2522);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 86, 2, 2544);
+    			add_location(canvas1, file, 92, 2, 2781);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 79, 0, 2251);
+    			add_location(ion_content, file, 85, 0, 2488);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -585,16 +731,18 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	let $touches;
+    	let $touches, $springyPoints, $$unsubscribe_springyPoints = noop, $$subscribe_springyPoints = () => ($$unsubscribe_springyPoints(), $$unsubscribe_springyPoints = subscribe(springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); }), springyPoints);
 
     	validate_store(touches, 'touches');
     	component_subscribe($$self, touches, $$value => { $touches = $$value; $$invalidate('$touches', $touches); });
+
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_springyPoints());
 
     	
 
       let canvas;
       let copy;
-      let points = [];
+      let currentPoints = [];
 
       function setTouchDryWet(dryWet, event) {
         const newTouches = event.targetTouches;
@@ -609,14 +757,16 @@ var app = (function () {
 
       function updateTouchPositions(event) {
         const newTouches = event.targetTouches;
-        points = newTouches;
+        let newPoints = [];
+        let currentTouches = $touches;
         for(let i = 0; i < newTouches.length; i++) {
-          let currentTouches = $touches;
           currentTouches[i].x = newTouches[i].clientX / canvas.clientWidth;
           currentTouches[i].y = newTouches[i].clientY / canvas.clientHeight;
 
-          touches.set(currentTouches);
+          newPoints.push({x: newTouches[i].clientX, y: newTouches[i].clientY});
         }
+        $$invalidate('currentPoints', currentPoints = newPoints);
+        touches.set(currentTouches);
       }
       onMount(() => {
     		const ctx = canvas.getContext('2d');
@@ -633,10 +783,12 @@ var app = (function () {
         function loop() {
         	frame = requestAnimationFrame(loop);
 
+          let points = $springyPoints;
+
           ctx.strokeStyle = "#4ecca3";
           copyCtx.strokeStyle = "#4ecca3";
 
-          copyCtx.globalAlpha = .99;
+          copyCtx.globalAlpha = .9;
 
           //clear copy canvas
           copyCtx.clearRect(0, 0, copy.width, copy.height);
@@ -648,7 +800,7 @@ var app = (function () {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           //copy old image from copy canvas to display canvas
-          const zoomfactor = 0.8; //set whatever you want as zoom factor
+          const zoomfactor = 0.98; //set whatever you want as zoom factor
           ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
           //draw new lines
@@ -687,8 +839,16 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('canvas' in $$props) $$invalidate('canvas', canvas = $$props.canvas);
     		if ('copy' in $$props) $$invalidate('copy', copy = $$props.copy);
-    		if ('points' in $$props) points = $$props.points;
+    		if ('currentPoints' in $$props) $$invalidate('currentPoints', currentPoints = $$props.currentPoints);
+    		if ('springyPoints' in $$props) $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = $$props.springyPoints));
     		if ('$touches' in $$props) touches.set($touches);
+    		if ('$springyPoints' in $$props) springyPoints.set($springyPoints);
+    	};
+
+    	let springyPoints;
+
+    	$$self.$$.update = ($$dirty = { currentPoints: 1 }) => {
+    		if ($$dirty.currentPoints) { $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = spring(currentPoints))); }
     	};
 
     	return {
@@ -696,6 +856,7 @@ var app = (function () {
     		copy,
     		setTouchDryWet,
     		updateTouchPositions,
+    		springyPoints,
     		canvas0_binding,
     		touchstart_handler,
     		touchend_handler,
