@@ -49,6 +49,8 @@
 
       let points = $springyPoints;
 
+      console.log(points);
+
       ctx.strokeStyle = "#4ecca3";
       copyCtx.strokeStyle = "#4ecca3";
 
@@ -71,8 +73,8 @@
       ctx.beginPath();
       for(let i=0; i<points.length; i++) {
         for(let j=i+1; j<points.length; j++) {
-          ctx.moveTo(points[i].clientX, points[i].clientY);
-          ctx.lineTo(points[j].clientX, points[j].clientY);
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[j].x, points[j].y);
         }
       }
       ctx.stroke();

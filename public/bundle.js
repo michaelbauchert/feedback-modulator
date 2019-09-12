@@ -685,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 86, 2, 2522);
+    			add_location(canvas0, file, 88, 2, 2528);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 92, 2, 2781);
+    			add_location(canvas1, file, 94, 2, 2787);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 85, 0, 2488);
+    			add_location(ion_content, file, 87, 0, 2494);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -785,6 +785,8 @@ var app = (function () {
 
           let points = $springyPoints;
 
+          console.log(points);
+
           ctx.strokeStyle = "#4ecca3";
           copyCtx.strokeStyle = "#4ecca3";
 
@@ -807,8 +809,8 @@ var app = (function () {
           ctx.beginPath();
           for(let i=0; i<points.length; i++) {
             for(let j=i+1; j<points.length; j++) {
-              ctx.moveTo(points[i].clientX, points[i].clientY);
-              ctx.lineTo(points[j].clientX, points[j].clientY);
+              ctx.moveTo(points[i].x, points[i].y);
+              ctx.lineTo(points[j].x, points[j].y);
             }
           }
           ctx.stroke();
