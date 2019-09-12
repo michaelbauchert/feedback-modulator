@@ -5,7 +5,7 @@
 
   let canvas;
   let copy;
-  let touchLength;
+  let touchLength = 0;
   let springyPoints = spring([{x: 0, y: 0},
                               {x: 0, y: 0},
                               {x: 0, y: 0},
@@ -75,8 +75,8 @@
 
       //draw new lines
       ctx.beginPath();
-      for(let i=0; i<touchLength.length; i++) {
-        for(let j=i+1; j<touchLength.length; j++) {
+      for(let i=0; i<touchLength; i++) {
+        for(let j=i+1; j<touchLength; j++) {
           ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
           ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
         }
