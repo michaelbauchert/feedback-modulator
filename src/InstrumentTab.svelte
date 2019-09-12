@@ -5,8 +5,7 @@
 
   let canvas;
   let copy;
-  let currentPoints = [];
-  $: springyPoints = spring(currentPoints, {stiffness: 0.13, damping: 0.13});
+  let springyPoints = spring([], {stiffness: 0.13, damping: 0.13});
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
@@ -29,7 +28,7 @@
 
       newPoints.push({x: newTouches[i].clientX, y: newTouches[i].clientY});
     }
-    currentPoints = newPoints;
+    springyPoints.set(newPoints);
     touches.set(currentTouches);
   }
   onMount(() => {
@@ -64,7 +63,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       //copy old image from copy canvas to display canvas
-      const zoomfactor = 0.9; //set whatever you want as zoom factor
+      const zoomfactor = 0.85; //set whatever you want as zoom factor
       ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
       //draw new lines

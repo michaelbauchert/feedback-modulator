@@ -685,12 +685,12 @@ var app = (function () {
     			canvas1 = element("canvas");
     			attr_dev(canvas0, "id", "canvas");
     			attr_dev(canvas0, "class", "svelte-ixloh3");
-    			add_location(canvas0, file, 86, 2, 2531);
+    			add_location(canvas0, file, 85, 2, 2498);
     			set_style(canvas1, "display", "none");
     			attr_dev(canvas1, "class", "svelte-ixloh3");
-    			add_location(canvas1, file, 92, 2, 2790);
+    			add_location(canvas1, file, 91, 2, 2757);
     			set_custom_element_data(ion_content, "scroll-y", "false");
-    			add_location(ion_content, file, 85, 0, 2497);
+    			add_location(ion_content, file, 84, 0, 2464);
 
     			dispose = [
     				listen_dev(canvas0, "touchstart", prevent_default(ctx.touchstart_handler), false, true),
@@ -731,18 +731,16 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	let $touches, $springyPoints, $$unsubscribe_springyPoints = noop, $$subscribe_springyPoints = () => ($$unsubscribe_springyPoints(), $$unsubscribe_springyPoints = subscribe(springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); }), springyPoints);
+    	let $touches, $springyPoints;
 
     	validate_store(touches, 'touches');
     	component_subscribe($$self, touches, $$value => { $touches = $$value; $$invalidate('$touches', $touches); });
-
-    	$$self.$$.on_destroy.push(() => $$unsubscribe_springyPoints());
 
     	
 
       let canvas;
       let copy;
-      let currentPoints = [];
+      let springyPoints = spring([], {stiffness: 0.13, damping: 0.13}); validate_store(springyPoints, 'springyPoints'); component_subscribe($$self, springyPoints, $$value => { $springyPoints = $$value; $$invalidate('$springyPoints', $springyPoints); });
 
       function setTouchDryWet(dryWet, event) {
         const newTouches = event.targetTouches;
@@ -765,7 +763,7 @@ var app = (function () {
 
           newPoints.push({x: newTouches[i].clientX, y: newTouches[i].clientY});
         }
-        $$invalidate('currentPoints', currentPoints = newPoints);
+        springyPoints.set(newPoints);
         touches.set(currentTouches);
       }
       onMount(() => {
@@ -800,7 +798,7 @@ var app = (function () {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           //copy old image from copy canvas to display canvas
-          const zoomfactor = 0.9; //set whatever you want as zoom factor
+          const zoomfactor = 0.85; //set whatever you want as zoom factor
           ctx.drawImage(copy, window.innerWidth * (1 - zoomfactor) / 2,  window.innerHeight * (1 - zoomfactor) / 2, zoomfactor * canvas.width, zoomfactor * canvas.height);
 
           //draw new lines
@@ -839,24 +837,17 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('canvas' in $$props) $$invalidate('canvas', canvas = $$props.canvas);
     		if ('copy' in $$props) $$invalidate('copy', copy = $$props.copy);
-    		if ('currentPoints' in $$props) $$invalidate('currentPoints', currentPoints = $$props.currentPoints);
-    		if ('springyPoints' in $$props) $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = $$props.springyPoints));
+    		if ('springyPoints' in $$props) $$invalidate('springyPoints', springyPoints = $$props.springyPoints);
     		if ('$touches' in $$props) touches.set($touches);
     		if ('$springyPoints' in $$props) springyPoints.set($springyPoints);
-    	};
-
-    	let springyPoints;
-
-    	$$self.$$.update = ($$dirty = { currentPoints: 1 }) => {
-    		if ($$dirty.currentPoints) { $$subscribe_springyPoints($$invalidate('springyPoints', springyPoints = spring(currentPoints, {stiffness: 0.13, damping: 0.13}))); }
     	};
 
     	return {
     		canvas,
     		copy,
+    		springyPoints,
     		setTouchDryWet,
     		updateTouchPositions,
-    		springyPoints,
     		canvas0_binding,
     		touchstart_handler,
     		touchend_handler,
