@@ -5,11 +5,14 @@
 
   let canvas;
   let copy;
+  let touchLength;
   let springyPoints = spring([{x: 0, y: 0},
                               {x: 0, y: 0},
                               {x: 0, y: 0},
                               {x: 0, y: 0},
-                              {x: 0, y: 0}], {stiffness: 0.6, damping: 0.3});
+                              {x: 0, y: 0}], {stiffness: 0.5, damping: 0.3});
+
+
 
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
@@ -24,6 +27,7 @@
 
   function updateTouchPositions(event) {
     const newTouches = event.targetTouches;
+    touchLength = newTouches.length;
     let newPoints = [];
     let currentTouches = $touches;
     for(let i = 0; i < newTouches.length; i++) {
@@ -31,11 +35,6 @@
       currentTouches[i].y = newTouches[i].clientY / canvas.clientHeight;
 
       newPoints = [...newPoints, {x: newTouches[i].clientX, y: newTouches[i].clientY}];
-    }
-
-    //zero out the unused points
-    for(let i = newPoints.length; i < $springyPoints.length; i++) {
-      newPoints = [...newPoints, {x: canvas.clientWidth / 2, y: canvas.clientHeight / 2}];
     }
 
     springyPoints.set(newPoints);
@@ -76,8 +75,8 @@
 
       //draw new lines
       ctx.beginPath();
-      for(let i=0; i<$springyPoints.length; i++) {
-        for(let j=i+1; j<$springyPoints.length; j++) {
+      for(let i=0; i<touchLength.length; i++) {
+        for(let j=i+1; j<touchLength.length; j++) {
           ctx.moveTo($springyPoints[i].x, $springyPoints[i].y);
           ctx.lineTo($springyPoints[j].x, $springyPoints[j].y);
         }
