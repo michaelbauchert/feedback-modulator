@@ -1,69 +1,22 @@
-*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Feedback Modulator
+This is a Progressive Web App noise instrument created with [Svelte](https://svelte.dev/), [Ionic 4 Components](https://ionicframework.com/docs/components), and [Tone.js](https://tonejs.github.io/). 
 
----
+## Files of Interest
+- The precompiled source files are in the [src folder](https://github.com/michaelbauchert/feedback-modulator/tree/master/src)
 
-# svelte app
+## Instrument Tab
+Sound is created when the user touches the screen on the Instrument tab; the microphone and speaker create a feedback loop. The user controls several effects using the main tab as an XY pad. Each finger controls parameters of a different effect.
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+Interacting with the screen on this tab creates geometric visuals using the HTML canvas. The visualizations become more complex with each finger touching this screen.
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+## Effects Tab
+### Toggling Between Effect Arangement Modes
+Each finger controls an effect, which can be added, deleted, and rearranged in the Effects tab. Pressing the button on the top right toggles between 'Deletion' and 'Sorting' modes indicated by the trash and list icons respectively. In 'Deletion' mode, the user may delete an effect by swipping an effect to the left side of the screen. In the 'Sorting' mode, effects may be rearanging by touching and draging an effect to its desired point in the signal chain.
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
+### Signal Flow and Control
+Signal moves through each effect starting from the top of the effects list and moving down. The order fingers are placed on the 'Instruments' tab determines which finger controls each effect. First finger controls first effect, second finger controls second effect, etc.
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
-
-## Get started
-
-Install the dependencies...
-
-```bash
-cd svelte-app
-npm install
-```
-
-...then start [Rollup](https://rollupjs.org):
-
-```bash
-npm run dev
-```
-
-Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+### Adding Effects
+Adding effects is done by clicking the + button in the lower left of the screen in the Effects Tab. This action brings up a modal window allowing the user to choose between the available effects. The new effect is appended to the bottom of the effect list upon selection.
 
 
-## Deploying to the web
-
-### With [now](https://zeit.co/now)
-
-Install `now` if you haven't already:
-
-```bash
-npm install -g now
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-now
-```
-
-As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public
-```
