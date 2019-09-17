@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { createEventDispatcher } from 'svelte';
   import { touches } from './touch store.js';
+  import Tone from 'tone';
 
   const effectParams = {
     highpass:
