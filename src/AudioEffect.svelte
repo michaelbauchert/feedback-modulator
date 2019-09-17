@@ -59,7 +59,7 @@
   //hook up effects to touches
   //~~~~~~~~~~~~~~~~~~~~~~~~~~
   let xParam = new Tone.Signal();
-  let YParam = new Tone.Signal();
+  let yParam = new Tone.Signal();
 
   $: {
     xParam.disconnect();
