@@ -57,8 +57,16 @@
 
   //hook up effects to touches
   //~~~~~~~~~~~~~~~~~~~~~~~~~~
-  let xParam = effectParams[name].xParam();
-  let yParam = effectParams[name].xParam();
+  let xParam = new Tone.Signal();
+  let YParam = new Tone.Signal();
+
+  $: {
+    xParam.disconnect();
+    xParam.connect(effectParams[name].xParam());
+
+    yParam.disconnect();
+    yParam.connect(effectParams[name].yParam());
+  }
 
   $: x = effectParams[name].xScale($touches[index].x);
   $: y = effectParams[name].yScale($touches[index].y);
@@ -78,6 +86,8 @@
   let swipe = false;
   $: if(shrink) {
     swipe = true;
+    xParam.dispose();
+    yParam.dispose();
     setTimeout( () => dispatch('remove'), 500);
     ionItemSliding.closeOpened();
   } else {
@@ -139,7 +149,7 @@
     border: 0px;
   }
 
-  ion-button {    
+  ion-button {
     --background: var(--ion-color-primary) !important;
     --background-activated: var(--ion-color-primary) !important;
   }

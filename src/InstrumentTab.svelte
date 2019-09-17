@@ -12,18 +12,16 @@
                               {x: 0, y: 0},
                               {x: 0, y: 0}], {stiffness: 0.5, damping: 0.3});
 
-
-
   function setTouchDryWet(dryWet, event) {
     const newTouches = event.targetTouches;
-    for(let i = 0; i < newTouches.length; i++) {
-      let currentTouches = $touches;
+    let currentTouches = $touches;
+    for(let i = 0; i < newTouches.length; i++) {      
       currentTouches[i].wet = dryWet;
-      touches.set(currentTouches);
     }
 
+    touches.set(currentTouches);
     updateTouchPositions(event);
-  }
+  }//end setTouchDryWet
 
   function updateTouchPositions(event) {
     const newTouches = event.targetTouches;
@@ -40,17 +38,18 @@
 
     springyPoints.set(newPoints);
     touches.set(currentTouches);
-  }
+  }//end updateTouchPositions
+
   onMount(() => {
 		const ctx = canvas.getContext('2d');
 
     const copyCtx = copy.getContext('2d');
 
-    $: canvas.width  = canvas.clientWidth;
-    $: canvas.height = canvas.clientHeight;
+    canvas.width  = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
 
-    $: copy.width  = canvas.clientWidth;
-    $: copy.height = canvas.clientHeight;
+    copy.width  = canvas.clientWidth;
+    copy.height = canvas.clientHeight;
 
     let frame;
 
@@ -89,13 +88,10 @@
 
         ctx.fillStyle = "#232931";
         ctx.fill();
-      }
     };
 
-
-
     loop();
-  });
+  }});
 </script>
 
 

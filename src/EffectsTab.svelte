@@ -30,6 +30,7 @@
     },
     vibrato:
     {
+      symbol: 'Vibrato',
       getEffect: function() {return new Tone.Vibrato ();}
     }
   };
@@ -52,10 +53,10 @@
 
   //reorder effects every time they're updated
   $: effects.forEach(function(effect, i) {
-    if(i == 0)
-      //mic.connect(effect);
-
-    if(i != effects.length - 1) {
+    if(i == 0) {
+      mic.disconnect();
+      mic.connect(effect.effect);
+    } else if(i != effects.length - 1) {
       effect.effect.disconnect();
       effect.effect.connect(effects[i + 1].effect);
     } else {
